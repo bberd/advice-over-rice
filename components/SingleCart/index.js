@@ -1,11 +1,13 @@
-class SingleCart extends React.Component {
+import React, { Component } from 'react';
+
+class SingleCart extends Component {
   static navigationOptions = {
     title: 'Chat with Lucy',
   };
   render() {
     return (
       <View>
-        <Text>Chat with Lucy</Text>
+        <Text>{this.props.selectedCart}</Text>
       </View>
     );
   }
