@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
-import { Text, View, StyleSheet, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, Card, Image } from 'react-native';
 import { carts } from '../../Cart';
 
 const { width, height } = Dimensions.get('window');
@@ -26,14 +26,12 @@ export class Mapping extends Component {
 
       }
     };
-    this.handleCartMarkerPress = this.handleCartMarkerPress.bind(this)
-    this.handleCartCalloutPress = this.handleCartCalloutPress.bind(this)
+    this.handleCartMarkerPress = this.handleCartMarkerPress.bind(this);
+    this.handleCartCalloutPress = this.handleCartCalloutPress.bind(this);
   }
 
 
-
-
-  watch id = null // watchID: ?number = null;
+  //watchID: ?number = null;
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
@@ -51,7 +49,7 @@ export class Mapping extends Component {
         this.setState({ initialPosition: initialRegion });
         this.setState({ markerPosition: initialRegion });
       },
-      error => alert(JSON.stringify(error)),
+      (error) => console.log(JSON.stringify(error)),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
 
@@ -75,12 +73,12 @@ export class Mapping extends Component {
     navigator.geolocaiton.clearWatch(this.watchID);
   }
 
-  handleCartMarkerPress(e, identifier) {
-    this.state.selectedMarker = '' //figure out what's in e
+  handleCartMarkerPress(event, identifier) {
+    this.setState({selectedMarker: ''}); //figure out what's in event
     // what to do when user presses on a single cart's marker
   }
 
-  handleCartCalloutPress(e, identifier) {
+  handleCartCalloutPress(event, identifier) {
     // what to do when user presses on a single cart's marker's callout
   }
 
@@ -93,35 +91,50 @@ export class Mapping extends Component {
       <View style={styles.container}>
         <MapView style={styles.map} region={this.state.initialPosition}>
 
-
           <MapView.Marker coordinate={this.state.markerPosition}>
-            <View style={styles.radius}>
-              <View style={styles.marker} />
+            <View style={styles.radiusGeoLoc}>
+              <View style={styles.markerGeoLoc} />
             </View>
           </MapView.Marker>
 
-          {carts.map(cart => {
-            const desc = `ADVICE: ${cart.avgAdviceRating}/5   RICE: ${cart.avgRiceRating}/5`
+          {carts.map(marker => {
+            const advRating = `ADVICE: ${marker.avgAdviceRating}/5`;
+            const riceRating = `RICE: ${marker.avgRiceRating}/5`;
+
             return (
               <MapView.Marker
-                key={cart.id}
+                key={marker.id}
                 coordinate={{
-                  latitude: cart.location[0],
-                  longitude: cart.location[1]
+                  latitude: marker.location[0],
+                  longitude: marker.location[1]
                 }}
-                identifier={toString(cart.id)}
-                onPress={(e) => handleCartMarkerPress(e, identifier)}
-                onCalloutPress={(e) => handleCartCalloutPress(e, identifier)}
-                title={cart.name}
-                description = {desc}
-                // 'RICE: ' {cart.avgRiceRating}
+                identifier={toString(marker.id)}
+                onPress={(event) => this.handleCartMarkerPress(event, this.identifier)}
+                onCalloutPress={(event) => this.handleCartCalloutPress(event, this.identifier)}
+                // title={marker.name}
+                // description = {desc}
+                image={require('../../assets/images/cartIcon.png')}
                 >
-                <View style={styles.radius}>
-                  <View style={styles.marker} />
-                </View>
+
+                <MapView.Callout style={styles.callout}>
+                    <Image style={{ flexDirection: 'row' }}
+                        source={require('../../assets/images/cart1.jpg')}
+                        style={{ width: 70, height: 70, marginRight: 10 }}
+                    />
+                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                          <Text style={styles.calloutTextTitle}>{marker.name}</Text>
+                          <Text style={styles.calloutText}>{advRating}</Text>
+                          <Text style={styles.calloutText}>{riceRating}</Text>
+                    </View>
+                </MapView.Callout>
+
               </MapView.Marker>
             );
+
           })}
+
+
+
         </MapView>
       </View>
     );
@@ -142,24 +155,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'gray'
   },
-  radius: {
-    height: 10,
-    width: 10,
-    borderRadius: 10 / 2,
+  radiusGeoLoc: {
+    height: 20,
+    width: 20,
+    borderRadius: 1 / 2,
     overflow: 'hidden',
-    backgroundColor: 'rgba(0, 122, 255, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(0,112,255,0.3)',
+    backgroundColor: 'rgba(100, 18, 254, 0.6509803921568628)',
+    borderWidth: 3,
+    borderColor: '#0230B5',
     alignItems: 'center',
     justifyContent: 'center'
   },
-  marker: {
-    height: 20,
-    width: 20,
+  markerGeoLoc: {
+    height: 5,
+    width: 5,
     borderWidth: 3,
-    borderColor: 'white',
-    borderRadius: 20 / 2,
+    borderColor: 'rgba(251,0,6,1.0)',
+    borderRadius: 1,
+    overflow: 'hidden',
+    backgroundColor: '#0230B5'
+  },
+  callout: {
+    flexDirection: 'row',
+    height: 70,
+    width: 200,
+    // borderWidth: 0,
+    // borderColor: 'white',
+    // borderRadius: 1 / 2,
     overflow: 'hidden',
     backgroundColor: '#007aff'
+  },
+  calloutText: {
+        fontSize: 10,
+        fontWeight: 'bold'
+  },
+  calloutTextTitle: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: 'white',
+        backgroundColor: 'red'
   }
 });
