@@ -24,15 +24,15 @@ export class Mapping extends Component {
                 latitude: 0,
                 longitude: 0
             },
-            selectedMarker: 0
+            selectedCart: {}
         };
         this.handleCartCalloutPress = this.handleCartCalloutPress.bind(this);
         this.handleMarkerPress = this.handleMarkerPress.bind(this);
     }
 
-    // static navigationOptions = {
-    // title: 'Advice Over Rice'
-    // };
+    static navigationOptions = {
+        title: 'Advice Over Rice'
+    };
 
     // watchID: ?number = null;
 
@@ -90,7 +90,7 @@ export class Mapping extends Component {
 
     handleMarkerPress(marker) {
         this.setState({
-            selectedMarker: marker.id,
+            selectedCart: marker,
             initialPosition: {
                 latitude: marker.location[0],
                 longitude: marker.location[1],
@@ -98,10 +98,12 @@ export class Mapping extends Component {
                 longitudeDelta: LONGITUDE_DELTA
             }
         });
-        setTimeout(() => console.log(this.state), 100);
+        // setTimeout(() => console.log(this.state), 100);
     }
 
-    handleCartCalloutPress(event) {}
+    handleCartCalloutPress() {
+        this.props.navigation.navigate('SingleCartScreen', this.state.selectedCart)
+    }
 
     generateStars(rating) {
         //loop through and attach assets
@@ -131,7 +133,10 @@ export class Mapping extends Component {
                                 identifier={toString(marker.id)}
                                 onPress={() => this.handleMarkerPress(marker)}
                                 image={require('../../assets/images/cartIcon.png')}>
-                                <MapView.Callout style={styles.callout}>
+                                <MapView.Callout
+                                    style={styles.callout}
+                                    onPress={() => this.handleCartCalloutPress(marker)}
+                                    >
                                     <Image
                                         source={require('../../assets/images/cart1.jpg')}
                                         style={{

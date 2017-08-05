@@ -3,8 +3,22 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
+import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation';
+import { SingleCart } from './components/SingleCart';
+import { Mapping } from './components/Map';
 
-export default class App extends React.Component {
+const Navigation = StackNavigator({
+  MapScreen: {screen: Mapping},
+  SingleCartScreen: {
+    screen: SingleCart,
+    navigationOptions: ({navigation}) => ({
+      title: navigation.state.params.name,
+    }),}
+});
+
+export default Navigation
+
+export class App extends React.Component {
   state = {
     assetsAreLoaded: false,
   };
