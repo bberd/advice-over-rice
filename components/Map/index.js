@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
-import { Text, View, StyleSheet, Dimensions, Card, Image } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, Image, TouchableHighlight } from 'react-native';
 import { carts } from '../../Cart';
 
 const { width, height } = Dimensions.get('window');
@@ -22,16 +22,14 @@ export class Mapping extends Component {
         latitude: 0,
         longitude: 0
       },
-      selectedMarker: {
-
-      }
+      selectedMarker: 0
     };
-    this.handleCartMarkerPress = this.handleCartMarkerPress.bind(this);
     this.handleCartCalloutPress = this.handleCartCalloutPress.bind(this);
+    this.handleMarkerPress = this.handleMarkerPress.bind(this);
   }
 
 
-  //watchID: ?number = null;
+  // watchID: ?number = null;
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
@@ -73,13 +71,20 @@ export class Mapping extends Component {
     navigator.geolocaiton.clearWatch(this.watchID);
   }
 
-  handleCartMarkerPress(event, identifier) {
-    this.setState({selectedMarker: ''}); //figure out what's in event
-    // what to do when user presses on a single cart's marker
+  handleMarkerPress(marker) {
+    this.setState({
+        selectedMarker: marker.id,
+        initialPosition: {
+            latitude: marker.location[0],
+            longitude: marker.location[1],
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+        }
+    })
+    setTimeout(() => console.log(this.state), 100)
   }
 
-  handleCartCalloutPress(event, identifier) {
-    // what to do when user presses on a single cart's marker's callout
+  handleCartCalloutPress(event) {
   }
 
   generateStars(rating) {
@@ -109,23 +114,22 @@ export class Mapping extends Component {
                   longitude: marker.location[1]
                 }}
                 identifier={toString(marker.id)}
-                onPress={(event) => this.handleCartMarkerPress(event, this.identifier)}
-                onCalloutPress={(event) => this.handleCartCalloutPress(event, this.identifier)}
-                // title={marker.name}
-                // description = {desc}
+                onPress={() => this.handleMarkerPress(marker)}
                 image={require('../../assets/images/cartIcon.png')}
                 >
 
-                <MapView.Callout style={styles.callout}>
-                    <Image style={{ flexDirection: 'row' }}
-                        source={require('../../assets/images/cart1.jpg')}
-                        style={{ width: 70, height: 70, marginRight: 10 }}
-                    />
-                    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                          <Text style={styles.calloutTextTitle}>{marker.name}</Text>
-                          <Text style={styles.calloutText}>{advRating}</Text>
-                          <Text style={styles.calloutText}>{riceRating}</Text>
-                    </View>
+                <MapView.Callout
+                            style={styles.callout}>
+                            <Image style={{ flexDirection: 'row' }}
+                                source={require('../../assets/images/cart1.jpg')}
+                                style={{ width: 70, height: 70, marginRight: 10 }}
+                            />
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                  <Text style={styles.calloutTextTitle}>{marker.name}</Text>
+                                  <Text style={styles.calloutText}>{advRating}</Text>
+                                  <Text style={styles.calloutText}>{riceRating}</Text>
+                            </View>
+
                 </MapView.Callout>
 
               </MapView.Marker>
