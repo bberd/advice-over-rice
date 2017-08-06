@@ -10,12 +10,12 @@ export class SingleCart extends Component {
     const cart = this.props.navigation.state.params;
 
     return (
-      <ScrollView>
+      <ScrollView style={styles.main}>
         { console.log(cart) }
-        <Text>{cart.name}</Text>
-        <Text>{cart.avgAdviceRating}</Text>
-        <Text>{cart.avgRiceRating}</Text>
-        <Text>{cart.ratingCount}</Text>
+        <Image source={require('../../assets/images/cart1.jpg')} />
+        <Text>Advice Rating: {cart.avgAdviceRating}</Text>
+        <Text>Rice Rating: {cart.avgRiceRating}</Text>
+        <Text>Total Ratings: {cart.ratingCount}</Text>
         { // <Text>
           //   {geocoder.reverseGeocode(
           //     arr.location[0],
@@ -26,14 +26,16 @@ export class SingleCart extends Component {
           //   )}
           // </Text>
         }
-        <Text>{cart.corner}</Text>
-        <Text>{cart.open}</Text>
-        <Text>{cart.closed}</Text>
-        <Text>{cart.hasGreenSauce}</Text>
+        <Text>Corner: {cart.corner}</Text>
+        <Text>Hours: {cart.hoursOpen}-{cart.hoursClose}</Text>
+        { cart.hasGreenSauce
+          ? <Text style={{color: 'green'}}>Has Green Sauce!</Text>
+          : null
+        }
         <View style={styles.vendor}>
-          <Image source={require('../../assets/images/cart1.jpg')} />
-          <Text>{cart.vendorName}</Text>
-          <Text>{cart.vendorBio}</Text>
+          <Image source={require('../../assets/images/profile1.jpg')} />
+          <Text>Advice and Rice by: {cart.vendorName}</Text>
+          <Text>{cart.vendorName}'s Life Story: {cart.vendorBio}</Text>
         </View>
         <Text>{cart.name}</Text>
 
@@ -43,6 +45,9 @@ export class SingleCart extends Component {
 }
 
 const styles = StyleSheet.create({
+    main: {
+      flex: 1
+    },
     vendor: {
       flex: 1,
 

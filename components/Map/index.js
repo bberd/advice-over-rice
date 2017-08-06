@@ -28,6 +28,7 @@ export class Mapping extends Component {
         };
         this.handleCartCalloutPress = this.handleCartCalloutPress.bind(this);
         this.handleMarkerPress = this.handleMarkerPress.bind(this);
+        // this.returnTruckIcon = this.returnTruckIcon.bind(this);
     }
 
     static navigationOptions = {
@@ -109,16 +110,22 @@ export class Mapping extends Component {
         //loop through and attach assets
     }
 
+    // returnTruckIcon = (hasGreenSauce) => {
+    //     if (hasGreenSauce) return 'require(`../../assets/images/cartIconGreen.png'
+    //     return 'require(`../../assets/images/cartIcon.png'
+    // }
+
     render() {
         return (
             <View style={styles.container}>
                 <Text> Filters Go Here </Text>
                 <MapView style={styles.map} region={this.state.initialPosition}>
-                    <MapView.Marker coordinate={this.state.markerPosition}>
-                        <View style={styles.radiusGeoLoc}>
-                            <View style={styles.markerGeoLoc} />
-                        </View>
+                    <MapView.Marker
+                        coordinate={this.state.markerPosition}
+                        image={require('../../assets/images/eatingIcon.png')}
+                        >
                     </MapView.Marker>
+
                     {carts.map(marker => {
                         const advRating = `ADVICE: ${marker.avgAdviceRating}/5`;
                         const riceRating = `RICE: ${marker.avgRiceRating}/5`;
@@ -132,7 +139,16 @@ export class Mapping extends Component {
                                 }}
                                 identifier={toString(marker.id)}
                                 onPress={() => this.handleMarkerPress(marker)}
-                                image={require('../../assets/images/cartIcon.png')}>
+                                image={marker.hasGreenSauce
+                                    ? require('../../assets/images/cartIconGreen.png')
+                                    : require('../../assets/images/cartIcon.png')
+                                }
+                                >
+
+                                <Text style={styles.iconRating}>
+                                    {((marker.avgAdviceRating + marker.avgRiceRating) / 2).toFixed(1)}
+                                </Text>
+
                                 <MapView.Callout
                                     style={styles.callout}
                                     onPress={() => this.handleCartCalloutPress(marker)}
@@ -179,7 +195,6 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 100,
         position: 'absolute',
-
         flex: 1
     },
     container: {
@@ -187,40 +202,15 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         flexDirection: 'column',
         alignItems: 'flex-end',
-        backgroundColor: 'gray'
-    },
-    radiusGeoLoc: {
-        height: 20,
-        width: 20,
-        borderRadius: 1 / 2,
-        overflow: 'hidden',
-        backgroundColor: 'rgba(100, 18, 254, 0.6509803921568628)',
-        borderWidth: 3,
-        borderColor: '#0230B5',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    markerGeoLoc: {
-        height: 5,
-        width: 5,
-        borderWidth: 3,
-        borderColor: 'rgba(251,0,6,1.0)',
-        borderRadius: 1,
-        overflow: 'hidden',
-        backgroundColor: '#0230B5'
+        backgroundColor: 'white'
     },
     callout: {
         flexDirection: 'row',
         flex: 4,
         height: 70,
         width: 170,
-        borderWidth: 4,
-        borderColor: 'red',
-        borderRadius: 0,
-        marginTop: 0,
-        padding: 0,
         overflow: 'hidden',
-        backgroundColor: '#007aff'
+        backgroundColor: 'red'
     },
     calloutText: {
         fontSize: 10,
@@ -231,5 +221,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         backgroundColor: 'red'
+    },
+    iconRating: {
+        fontSize: 10,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'right',
+        paddingLeft: 3
     }
 });

@@ -7,14 +7,19 @@ import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation'
 import { SingleCart } from './components/SingleCart';
 import { Mapping } from './components/Map';
 
-const Navigation = StackNavigator({
-  MapScreen: {screen: Mapping},
-  SingleCartScreen: {
-    screen: SingleCart,
-    navigationOptions: ({navigation}) => ({
-      title: navigation.state.params.name,
-    }),}
-});
+const Navigation = StackNavigator(
+  {
+    MapScreen: {
+      screen: Mapping
+    },
+    SingleCartScreen: {
+      screen: SingleCart,
+      navigationOptions: ({navigation}) => ({
+        title: navigation.state.params.name,
+      }),
+    }
+  }
+);
 
 export default Navigation
 
