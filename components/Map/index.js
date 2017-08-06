@@ -103,7 +103,7 @@ export class Mapping extends Component {
     }
 
     handleCartCalloutPress() {
-        this.props.navigation.navigate('SingleCartScreen', this.state.selectedCart)
+        this.props.navigation.navigate('SingleCartScreen', { cart: this.state.selectedCart, position: this.state.initialPosition} )
     }
 
     render() {
@@ -118,8 +118,6 @@ export class Mapping extends Component {
                     </MapView.Marker>
 
                     {carts.map(marker => {
-                        const advRating = `ADVICE: ${marker.avgAdviceRating}/5`;
-                        const riceRating = `RICE: ${marker.avgRiceRating}/5`;
 
                         return (
                             <MapView.Marker
