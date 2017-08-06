@@ -4,6 +4,7 @@ import { Text, View, StyleSheet, Dimensions, Image } from 'react-native';
 import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation';
 import { carts } from '../../Cart';
 import { SingleCart } from '../SingleCart';
+import { Rating } from '../Rating';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -35,7 +36,7 @@ export class Mapping extends Component {
         title: 'Advice Over Rice'
     };
 
-    // watchID: ?number = null;
+    //watchID: ?number = null;
 
     componentDidMount() {
         navigator.geolocation.getCurrentPosition(
@@ -99,21 +100,11 @@ export class Mapping extends Component {
                 longitudeDelta: LONGITUDE_DELTA
             }
         });
-        // setTimeout(() => console.log(this.state), 100);
     }
 
     handleCartCalloutPress() {
         this.props.navigation.navigate('SingleCartScreen', this.state.selectedCart)
     }
-
-    generateStars(rating) {
-        //loop through and attach assets
-    }
-
-    // returnTruckIcon = (hasGreenSauce) => {
-    //     if (hasGreenSauce) return 'require(`../../assets/images/cartIconGreen.png'
-    //     return 'require(`../../assets/images/cartIcon.png'
-    // }
 
     render() {
         return (
@@ -153,30 +144,51 @@ export class Mapping extends Component {
                                     style={styles.callout}
                                     onPress={() => this.handleCartCalloutPress(marker)}
                                     >
-                                    <Image
-                                        source={require('../../assets/images/cart1.jpg')}
-                                        style={{
-                                            width: 70,
-                                            height: 70,
-                                            marginRight: 0
-                                        }}
-                                    />
-                                    <View
-                                        style={{
-                                            flexDirection: 'column',
-                                            flex: 3,
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
+                                    <View style={{flex: 2}}>
+                                        <Image
+                                            source={require('../../assets/images/cart1.jpg')}
+                                            style={{
+                                                width: 70,
+                                                height: 70,
+                                            }}
+                                        />
+                                    </View>
+                                    <View style={{
+                                        flexDirection: 'column',
+                                        flex: 3,
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
                                         }}>
                                         <Text style={styles.calloutTextTitle}>
                                             {marker.name}
                                         </Text>
-                                        <Text style={styles.calloutText}>
-                                            {advRating}
-                                        </Text>
-                                        <Text style={styles.calloutText}>
-                                            {riceRating}
-                                        </Text>
+
+                                        <View style={{
+                                            flexDirection: 'column',
+                                            paddingLeft: 4,
+                                            flex: 1,
+                                            justifyContent: 'center'
+                                            }}>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                                }}>
+                                                <Text style={{paddingRight: 4, fontSize: 12}}>
+                                                    Advice
+                                                </Text>
+                                                <Rating rating={marker.avgAdviceRating} />
+                                            </View>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center'
+                                                }}>
+                                                <Text style={{paddingRight: 17, fontSize: 12}}>
+                                                    Rice
+                                                </Text>
+                                                <Rating rating={marker.avgRiceRating} />
+                                            </View>
+                                        </View>
                                     </View>
                                 </MapView.Callout>
                             </MapView.Marker>
@@ -213,14 +225,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'red'
     },
     calloutText: {
-        fontSize: 10,
+        fontSize: 200,
         fontWeight: 'bold'
     },
     calloutTextTitle: {
         fontSize: 14,
         fontWeight: 'bold',
         color: 'white',
-        backgroundColor: 'red'
+        backgroundColor: 'red',
+        paddingTop: 5
     },
     iconRating: {
         fontSize: 10,

@@ -27,7 +27,7 @@ export const carts = [
       hoursOpen: '11:00am',
       hoursClose: '11:00pm',
       avgAdviceRating: 4.32,
-      avgRiceRating: 3.95,
+      avgRiceRating: 3.6,
       ratingCount: 145,
       hasGreenSauce: false,
       cartPhoto: 'http://midtownlunch.com/downtown-nyc/files/2013/06/P1040318-500x375.jpg',
