@@ -5,25 +5,23 @@ import { TabNavigator, TabBarBottom } from 'react-navigation';
 
 import Colors from '../constants/Colors';
 
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import MainScreen from '../screens/MainScreen';
+import { SingleCart } from '../components/SingleCart';
+import { VendorBio } from '../components/VendorBio';
 
 export default TabNavigator(
   {
-    Home: {
-      screen: HomeScreen,
+    Cart: {
+      screen: SingleCart,
+      navigationOptions: ({navigation}) => ({
+       title: navigation.state.params.name,
+      }),
     },
-    Links: {
-      screen: LinksScreen,
+    Vendor: {
+      screen: VendorBio,
     },
-    Settings: {
-      screen: SettingsScreen,
-    },
-    Main: {
-      screen: MainScreen
-    }
+    // Main: {
+    //   screen: MainScreen
+    // }
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -31,25 +29,25 @@ export default TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         switch (routeName) {
-          case 'Home':
+          case 'Cart':
             iconName = Platform.OS === 'ios'
-              ? `ios-information-circle${focused ? '' : '-outline'}`
-              : 'md-information-circle';
+              ? `ios-nutrition${focused ? '' : '-outline'}`
+              : 'md-nutrition';
             break;
-          case 'Links':
+          case 'Vendor':
             iconName = Platform.OS === 'ios'
-              ? `ios-link${focused ? '' : '-outline'}`
-              : 'md-link';
+              ? `ios-body${focused ? '' : '-outline'}`
+              : 'md-body';
             break;
-          case 'Settings':
-            iconName = Platform.OS === 'ios'
-              ? `ios-options${focused ? '' : '-outline'}`
-              : 'md-options';
-            break;
-          case 'Main':
-            iconName = Platform.OS === 'ios'
-              ? `ios-options${focused ? '' : '-outline'}`
-              : 'md-options';
+          // case 'Settings':
+          //   iconName = Platform.OS === 'ios'
+          //     ? `ios-options${focused ? '' : '-outline'}`
+          //     : 'md-options';
+          //   break;
+          // case 'Main':
+          //   iconName = Platform.OS === 'ios'
+          //     ? `ios-options${focused ? '' : '-outline'}`
+          //     : 'md-options';
         }
         return (
           <Ionicons

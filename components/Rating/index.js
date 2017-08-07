@@ -4,24 +4,27 @@ import Stars from 'react-native-stars';
 
 
 export const Rating = (props) => {
-
+  console.log(props.ratingObj);
+  const rating = props.ratingObj && props.ratingObj.rating;
+  const spacing = props.ratingObj && props.ratingObj.spacing;
+  let starSize = props.ratingObj && props.ratingObj.starSize;
   // fixing stars => only respond to whole and half numbers
-  var fixedRating = null;
-  const decimal = props.rating - Math.floor(props.rating);
+  let fixedRating = null;
+  const decimal = rating - Math.floor(rating);
   if (decimal > 0.333 && decimal < 0.666) {
-    fixedRating = props.rating - decimal + 0.5;
+    fixedRating = rating - decimal + 0.5;
   } else if (decimal > 0.666) {
-    fixedRating = Math.ceil(props.rating);
+    fixedRating = Math.ceil(rating);
   }
 
     return (
       <View style={{alignItems: 'center'}}>
         <Stars
         half={true}
-        rating={fixedRating || props.rating}
+        rating={fixedRating || rating}
         //update={(val)=>{setState({stars: val})}}
-        spacing={2}
-        starSize={8}
+        spacing={spacing || 2}
+        starSize={starSize || 8}
         count={5}
         fullStar={require('../../assets/stars/starFilled.png')}
         emptyStar={require('../../assets/stars/starEmpty.png')}

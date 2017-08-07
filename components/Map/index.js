@@ -103,7 +103,7 @@ export class Mapping extends Component {
     }
 
     handleCartCalloutPress() {
-        this.props.navigation.navigate('SingleCartScreen', { cart: this.state.selectedCart, position: this.state.initialPosition} )
+        this.props.navigation.navigate('TabNavScreen', { cart: this.state.selectedCart, position: this.state.initialPosition} )
     }
 
     render() {
@@ -175,7 +175,7 @@ export class Mapping extends Component {
                                                 <Text style={{paddingRight: 4, fontSize: 12}}>
                                                     Advice
                                                 </Text>
-                                                <Rating rating={marker.avgAdviceRating} />
+                                                <Rating ratingObj={{rating: marker.avgAdviceRating}} />
                                             </View>
                                             <View style={{
                                                 flexDirection: 'row',
@@ -184,7 +184,7 @@ export class Mapping extends Component {
                                                 <Text style={{paddingRight: 17, fontSize: 12}}>
                                                     Rice
                                                 </Text>
-                                                <Rating rating={marker.avgRiceRating} />
+                                                <Rating ratingObj={{rating: marker.avgRiceRating}} />
                                             </View>
                                         </View>
                                     </View>
