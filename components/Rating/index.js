@@ -4,7 +4,6 @@ import Stars from 'react-native-stars';
 
 
 export const Rating = (props) => {
-  console.log(props.ratingObj);
   const rating = props.ratingObj && props.ratingObj.rating;
   const spacing = props.ratingObj && props.ratingObj.spacing;
   let starSize = props.ratingObj && props.ratingObj.starSize;

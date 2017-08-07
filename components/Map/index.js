@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
-import { Text, View, StyleSheet, Dimensions, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, Switch } from 'react-native';
 import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation';
+import { Container, Card, CardItem, Text, Thumbnail, DeckSwiper } from 'native-base';
+import moment from 'moment';
 import { carts } from '../../Cart';
 import { SingleCart } from '../SingleCart';
 import { Rating } from '../Rating';
@@ -10,6 +12,7 @@ const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const currentTime = new moment().format("HH:mma");
 
 export class Mapping extends Component {
     constructor() {
@@ -25,11 +28,14 @@ export class Mapping extends Component {
                 latitude: 0,
                 longitude: 0
             },
-            selectedCart: {}
+            selectedCart: {},
+            greenSauceSwitchIsOn: false,
+            openNowSwitchIsOn: false,
         };
         this.handleCartCalloutPress = this.handleCartCalloutPress.bind(this);
         this.handleMarkerPress = this.handleMarkerPress.bind(this);
-        // this.returnTruckIcon = this.returnTruckIcon.bind(this);
+        this.returnFilteredArray = this.returnFilteredArray.bind(this);
+        this.isOpen = this.isOpen.bind(this);
     }
 
     static navigationOptions = {
@@ -106,10 +112,66 @@ export class Mapping extends Component {
         this.props.navigation.navigate('TabNavScreen', { cart: this.state.selectedCart, position: this.state.initialPosition} )
     }
 
+    returnFilteredArray(cart) {
+        return (
+                (
+                 (
+                  this.state.greenSauceSwitchIsOn && cart.hasGreenSauce)
+                  || !this.state.greenSauceSwitchIsOn
+                 )
+                 &&
+                 (
+                  (
+                   this.state.openNowSwitchIsOn && this.isOpen(cart))
+                  || !this.state.openNowSwitchIsOn
+                 )
+                )
+    }
+
+    isOpen(cart) {
+        // if moment(cart.hoursClose, "HH:mma") > moment('12:00am', 'HH:mma') &&
+        // return ((moment(cart.hoursOpen, "HH:mma") < currentTime) && (currentTime < moment(cart.hoursClose, "HH:mma")))
+    }
+
     render() {
+
         return (
             <View style={styles.container}>
-                <Text> Filters Go Here </Text>
+
+                <Card>
+                  <View style={{flexDirection: 'column'}} >
+                    <CardItem>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{flex: 1}}>
+                                Open Now?
+                            </Text>
+                            <View style={{flex: 1}}>
+                                <Switch
+                                    onValueChange={(value) => this.setState({openNowSwitchIsOn: value})}
+                                    value={this.state.openNowSwitchIsOn}
+                                />
+                            </View>
+                        </View>
+                    </CardItem>
+                    <CardItem>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={{flex: 1}}>
+                                Green Sauce Only!
+                            </Text>
+                            <View style={{flex: 1}}>
+                                <Switch
+                                    onValueChange={(value) => this.setState({greenSauceSwitchIsOn: value})}
+                                    value={this.state.greenSauceSwitchIsOn}
+                                />
+                            </View>
+                        </View>
+                    </CardItem>
+                  </View>
+                </Card>
+
+
+
+
                 <MapView style={styles.map} region={this.state.initialPosition}>
                     <MapView.Marker
                         coordinate={this.state.markerPosition}
@@ -117,8 +179,12 @@ export class Mapping extends Component {
                         >
                     </MapView.Marker>
 
-                    {carts.map(marker => {
-
+                    { carts
+                        .filter(this.returnFilteredArray)
+                        .map(marker => {
+                        // console.log(moment())
+                        // console.log(marker.hoursOpen)
+                        // console.log(moment(marker.hoursOpen, "HH:mma"))
                         return (
                             <MapView.Marker
                                 key={marker.id}
@@ -203,15 +269,15 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         top: 0,
-        bottom: 100,
-        position: 'absolute',
-        flex: 1
+        bottom: 0,
+        position: 'relative',
+        flex: 3.5
     },
     container: {
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         flexDirection: 'column',
-        alignItems: 'flex-end',
+        alignItems: 'stretch',
         backgroundColor: 'white'
     },
     callout: {
